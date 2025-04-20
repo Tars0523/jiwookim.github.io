@@ -11,7 +11,12 @@ author:
 
 # Build settings
 markdown:       kramdown
-
+kramdown:
+  input: GFM
+  math_engine: mathjax
+  math_engine_opts:
+    preview: false
+    
 # Assets
 sass:
   sass_dir:     _sass
