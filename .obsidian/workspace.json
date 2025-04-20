@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "Flow Model.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "Flow Model"
             }
           }
         ]
@@ -182,7 +182,7 @@
   "active": "0e166fa142eced4c",
   "lastOpenFiles": [
     "README.md",
-    "Untitled.md",
+    "Flow Model.md",
     "Untitled.canvas",
     "2025-04-20.md"
   ]
