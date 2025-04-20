@@ -2,47 +2,47 @@
 ## 🔥 Autoregressive Model 이란?
 Autoregressive Model 란 현재 출력이 과거의 출력값들에 조건부로 의존하는 확률 생성 모델이다:
 $$
-P(\mathbf{x}_{1:D})=P(x_0)\\prod_{i=1:D} P(x_i|\mathbf{x}_{1:i}).
+P(\bold{x}_{1:D})=P(x_0)\Pi_{i=1:D} P(x_i|\bold{x}_{1:i}).
 $$
 
-$P(x_i|\mathbf{x}_{1:i})$를 모델링하기 어렵지만, $\mathbf{x}$ 내부의 원소들간에 인과관계가 있는 경우(e.g., Audio) 이러한 모델링이 장점을 가진다. 다른 생성형 모델(such as, flow-based, implicit models...) 에 비해서 학습이 Stable하고, Sampling은 느리다(순서대로 봐야 함으로 O(n) 만큼의 시간 복잡도를 가짐).
+$P(x_i|\bold{x}_{1:i})$를 모델링하기 어렵지만, $\bold{x}$ 내부의 원소들간에 인과관계가 있는 경우(e.g., Audio) 이러한 모델링이 장점을 가진다. 다른 생성형 모델(such as, flow-based, implicit models...) 에 비해서 학습이 Stable하고, Sampling은 느리다(순서대로 봐야 함으로 O(n) 만큼의 시간 복잡도를 가짐).
 
 ## 🤔 확률 생성 모델이란?
-$P(\mathbf{x})$를 생성한다는데 이게 무슨 말인지 직관적으로 안와닿을 수 있다. 쉽게 설명하면, 상황은 이렇다: 예를 들어 내가 이미지를 보았는데 강아지 사진이 나왔다고 가정해보자! 그때 어떠한 분포에서 강아지 사진이 나왔을까? 
+$P(\bold{x})$를 생성한다는데 이게 무슨 말인지 직관적으로 안와닿을 수 있다. 쉽게 설명하면, 상황은 이렇다: 예를 들어 내가 이미지를 보았는데 강아지 사진이 나왔다고 가정해보자! 그때 어떠한 분포에서 강아지 사진이 나왔을까? 
 \
-즉, 현재 상황은 "$\textit{Sampling 은 할 수 있지만, 정확히 어떤 분포인지를 모르는 상황}$" 이다. 난 처음에 이 문제 자체가 뭔가 신기?하다고 느꼈다. 그런데 생각해보면, 강아지가 어떠한 분포에서 추출했는지 알 방법이 없다. 그래서 이걸 왜 알아야 하냐? $P(\mathbf{x})$를 알아서 좋은게 뭐냐? 라고 생각이 들었는데, 그거에 대한 답변은 나중에 차근차근 하겠다.
+즉, 현재 상황은 "$\textit{Sampling 은 할 수 있지만, 정확히 어떤 분포인지를 모르는 상황}$" 이다. 난 처음에 이 문제 자체가 뭔가 신기?하다고 느꼈다. 그런데 생각해보면, 강아지가 어떠한 분포에서 추출했는지 알 방법이 없다. 그래서 이걸 왜 알아야 하냐? $P(\bold{x})$를 알아서 좋은게 뭐냐? 라고 생각이 들었는데, 그거에 대한 답변은 나중에 차근차근 하겠다.
 \
-그러니까 내 생각에는, 확률 생성 모델이란, $\textit{샘플링}(i.e., \mathbf{x} \sim P(\mathbf{x}))$ 은 할 수 있는데, $P(\mathbf{x})$를 모르는 상황에서, $P(\mathbf{x})$ 를 추정하여, 어떤 확률을 생성해내는, 정확히 이야기하면 확률 분포를 찾고자 하는 문제같다. 처음 들었을 때 굉장히, 매력적인 문제였다.
+그러니까 내 생각에는, 확률 생성 모델이란, $\textit{샘플링}(i.e., \bold{x} \sim P(\bold{x}))$ 은 할 수 있는데, $P(\bold{x})$를 모르는 상황에서, $P(\bold{x})$ 를 추정하여, 어떤 확률을 생성해내는, 정확히 이야기하면 확률 분포를 찾고자 하는 문제같다. 처음 들었을 때 굉장히, 매력적인 문제였다.
 
 ### 🪙 Coin Example 
-동전을 던졌을 때, 앞 혹은 뒤가 나온다. $P(\mathbf{x})$ 가 뭘까? 여기서 $\mathbf{x}=\{앞,뒤\}$ 이다.
+동전을 던졌을 때, 앞 혹은 뒤가 나온다. $P(\bold{x})$ 가 뭘까? 여기서 $\bold{x}=\{앞,뒤\}$ 이다.
 \
-이때 우리는 앞 아니면 뒤기 때문에 $P(\mathbf{x}=앞)=\beta$ 라면, $P(\mathbf{x}=뒤)=1-\beta$ 라고 할 수 있다.
+이때 우리는 앞 아니면 뒤기 때문에 $P(\bold{x}=앞)=\beta$ 라면, $P(\bold{x}=뒤)=1-\beta$ 라고 할 수 있다.
 \
-그러면 $P(\mathbf{x})$는 뭘까?
+그러면 $P(\bold{x})$는 뭘까?
 
 $$
-P(\mathbf{x}; \beta) =
+P(\bold{x}; \beta) =
 \begin{cases}
-\beta       & \text{if } \mathbf{x} = 앞 \\
-1 - \beta   & \text{if } \mathbf{x} = 뒤.
+\beta       & \text{if } \bold{x} = 앞 \\
+1 - \beta   & \text{if } \bold{x} = 뒤.
 \end{cases}
 $$
 
-이때 이러한 $P(\mathbf{x})$를 사람들은 "베르누이 분포"라고 부르기로 했다. 
+이때 이러한 $P(\bold{x})$를 사람들은 "베르누이 분포"라고 부르기로 했다. 
 \
-동전 던지기 문제를 $\beta$라는 변수를 가지고 $P(\mathbf{x})$를 모델링 할 수 있음을 우리는 동의할 수 있다.
+동전 던지기 문제를 $\beta$라는 변수를 가지고 $P(\bold{x})$를 모델링 할 수 있음을 우리는 동의할 수 있다.
 
 ### 🎲 Dice Example 
 이제는 조금 더 복잡한 문제인, 주사위 문제를 떠올려보자~~
 \
-주사위를 던졌을 때, 6이 나왔다고 해보자. 샘플링을 했는데, 6이 나왔다는 건데, 이때 $P(\mathbf{x})$는 뭘까? 여기서 $\mathbf{x}=\{1,2,3,4,5,6\}$.
+주사위를 던졌을 때, 6이 나왔다고 해보자. 샘플링을 했는데, 6이 나왔다는 건데, 이때 $P(\bold{x})$는 뭘까? 여기서 $\bold{x}=\{1,2,3,4,5,6\}$.
 \
 1이 나올 확률은 $\beta_1$ ... 5가 나올 확률을 $\beta_5$, 마지막으로 6이 나올 확률은 $1-(\sum_{i=1:5}\beta_{i})$ 이다. 그러므로 총 5개의 변수($\beta_1 \sim \beta_5$) 가 필요해진다.
 \
-이때 $P(\mathbf{x})$는 다음과 같이 적을 수 있다:
+이때 $P(\bold{x})$는 다음과 같이 적을 수 있다:
 $$
-P(\mathbf{x}; \beta_{1:5}) =
+P(\bold{x}; \beta_{1:5}) =
 \begin{cases}
 \beta_1 & \text{if } x = 1 \\
 \beta_2 & \text{if } x = 2 \\
@@ -64,15 +64,15 @@ R,G,B 각각 256 (0~255) 의 이산적인 값을 가진다고 가정할 때,
 총 필요한 변수는 256 * 256 * 256 - 1이다.
 
 ### 🔷 MNIST Example
-32 by 32 숫자 이미지인 MNIST의 $P(\mathbf{x})$ 를 모델링한다고 가정할 때(각 픽셀은 0 또는 1, 흑 or 백), 에서 가능한 상태가 몇 가지 일까? $2^{32\times 32}\approx 10^{308}$ 이다. 
+32 by 32 숫자 이미지인 MNIST의 $P(\bold{x})$ 를 모델링한다고 가정할 때(각 픽셀은 0 또는 1, 흑 or 백), 에서 가능한 상태가 몇 가지 일까? $2^{32\times 32}\approx 10^{308}$ 이다. 
 \
-관측 가능한 우주에 있는 별의 갯수가 $10^{24}$ 인 것에 비하면, MNIST의 $P(\mathbf{x})$ 를 모델링 하기 위해서 필요한 변수가 "압도적으로" 많다. 
+관측 가능한 우주에 있는 별의 갯수가 $10^{24}$ 인 것에 비하면, MNIST의 $P(\bold{x})$ 를 모델링 하기 위해서 필요한 변수가 "압도적으로" 많다. 
 \
-그리고 $P(\mathbf{x})$ 를 만들기 위해서 필요한 변수의 갯수는 $10^{308}-1$ 이다. 이거를 optimal 하게 구한다는게 양자 컴퓨터에서 가능할랑가? (난 모름)
+그리고 $P(\bold{x})$ 를 만들기 위해서 필요한 변수의 갯수는 $10^{308}-1$ 이다. 이거를 optimal 하게 구한다는게 양자 컴퓨터에서 가능할랑가? (난 모름)
 
 ### 🔷 Independence!
 
-음...간단한 MNIST 문제에서도, $P(\mathbf{x})$를 모델링하기 위해 필요한 변수가 너무 많아 보인다.
+음...간단한 MNIST 문제에서도, $P(\bold{x})$를 모델링하기 위해 필요한 변수가 너무 많아 보인다.
 \
 그렇다면, 이제 각 확률 변수가 독립적이라고 가정하고, MNIST에서 가능한 "상태"에 대해서 생각해보자.
 \
@@ -135,9 +135,9 @@ $$
 \
 일단 간단하게 조건부 독립에 대해서 집고 넘어가자.
 $$
-P(\mathbf{x},\mathbf{y}|\mathbf{z})=P(\mathbf{x}|\mathbf{z})~P(\mathbf{y}|\mathbf{z})~\Longleftrightarrow~\mathbf{x} \perp \mathbf{y}  \quad \text{given}~\mathbf{z}
+P(\bold{x},\bold{y}|\bold{z})=P(\bold{x}|\bold{z})~P(\bold{y}|\bold{z})~\Longleftrightarrow~\bold{x} \perp \bold{y}  \quad \text{given}~\bold{z}
 $$
-직관적으로, $\mathbf{z}$를 알면, $\mathbf{x}$ 와 $\mathbf{y}$ 가 정보적으로 분리된다는 의미이다.
+직관적으로, $\bold{z}$를 알면, $\bold{x}$ 와 $\bold{y}$ 가 정보적으로 분리된다는 의미이다.
 \
 High Demensional한 구조를 Local 한 구조로 분해할 수 있음을 의미!
 
@@ -151,7 +151,7 @@ High Demensional한 구조를 Local 한 구조로 분해할 수 있음을 의미
 \
 쨋든 분해를 해보면:
 $$
-P(\mathbf{x})=P(x_1)P(x_2|x_1)...P(x_n|x_{1:n}).
+P(\bold{x})=P(x_1)P(x_2|x_1)...P(x_n|x_{1:n}).
 $$
 이 체인룰 자체는 상태의 갯수와 확률을 모델링하기 위해 필요한 파라미터의 갯수 자체에 변화를 주지는 못한다.
 \
@@ -159,14 +159,14 @@ $$
 \
 Markov Assumption이란:
 $$
-\mathbf{x}_{i+1} \perp \mathbf{x}_{1:i-1} | \mathbf{x}_{i}.
+\bold{x}_{i+1} \perp \bold{x}_{1:i-1} | \bold{x}_{i}.
 $$
 이전 상태를 정확히 안다면, 내가 어떤 과거에 상태를 가졌건간에 상관이 없다는 것이다. Bayes Filter를 유도할 때 사용된다.
 예를 들어, 내 로봇의 현재 속도는 이전 속도만 알면 어느정도 알 수 있다. 굳이 100초전 속도를 알 필요는 없다.
 \
 이를 이용하여 다음과 같은 식을 유도할 수 있다:
 $$
-P(\mathbf{x})=P(x_1)P(x_2|x_1)...P(x_n|x_{1:n})=P(x_1)\\prod_{i=2:n}P(x_i|x_{i-1}).
+P(\bold{x})=P(x_1)P(x_2|x_1)...P(x_n|x_{1:n})=P(x_1)\Pi_{i=2:n}P(x_i|x_{i-1}).
 $$
 결과 필요한 파라미터의 수는 $P(x_1)$ 1개, $P(x_i|x_{i-1})$ 각각 2개 이므로 $1 + (n-1) * 2 = 2n-1$ 이다.
 
@@ -204,57 +204,57 @@ $$
 
 ## 🔷 Bayes Optimal Classifier
 
-그래서 뭐...$P(\mathbf{x})$를 잘 구했다고 치자! 그러면 뭐가 좋은건데? 라고 의문에 대한 대답을 할 차례가 왔다. 그 대답중 한 가지는, 분류 문제를 풀 수 있기 때문이다. 아래는 분류 문제의 목표를 수식화 한 것이다:
+그래서 뭐...$P(\bold{x})$를 잘 구했다고 치자! 그러면 뭐가 좋은건데? 라고 의문에 대한 대답을 할 차례가 왔다. 그 대답중 한 가지는, 분류 문제를 풀 수 있기 때문이다. 아래는 분류 문제의 목표를 수식화 한 것이다:
 $$
-f^*(\mathbf{x})=\underbrace{\text{argmax}_{\mathbf{y}} P(\mathbf{y}|\mathbf{x})}_{\text{Discriminative Approach}}=\underbrace{\text{argmax}_{\mathbf{y}} P(\mathbf{x}|\mathbf{y})P(\mathbf{y})}_{\text{Generative Approach}}.
+f^*(\bold{x})=\underbrace{\text{argmax}_{\bold{y}} P(\bold{y}|\bold{x})}_{\text{Discriminative Approach}}=\underbrace{\text{argmax}_{\bold{y}} P(\bold{x}|\bold{y})P(\bold{y})}_{\text{Generative Approach}}.
 $$
 이 문제를 해결하기 위한 방법을 2가지로 나누는데, 첫 번째는 "Generative Model" 그리고 두 번째는 "Discriminative Model" 이다.
 
 ### 📸 Generaitve Model
 
-이 방법은 $P(\mathbf{x}|\mathbf{y})$와 $P(\mathbf{y})$ 모델링 하고자 한다. $P(\mathbf{y})$는 그냥 Class 갯수 대로 uniform? 하게 분포하면 되지만, 문제는 어떻게 $P(\mathbf{x}|\mathbf{y})$ 를 모델링 하냐이다.
+이 방법은 $P(\bold{x}|\bold{y})$와 $P(\bold{y})$ 모델링 하고자 한다. $P(\bold{y})$는 그냥 Class 갯수 대로 uniform? 하게 분포하면 되지만, 문제는 어떻게 $P(\bold{x}|\bold{y})$ 를 모델링 하냐이다.
 
 ### 🕵🏻 Discriminative Model
 
-반대로 Discriminative Model은 어떻게 $P(\mathbf{y}|\mathbf{x})$를 모델링하느냐가 문제이다. 보통 여기서는 $\mathbf{x}$가 given 이기 때문에 $P(\mathbf{x})$는 크게 고려하지 않는다.
+반대로 Discriminative Model은 어떻게 $P(\bold{y}|\bold{x})$를 모델링하느냐가 문제이다. 보통 여기서는 $\bold{x}$가 given 이기 때문에 $P(\bold{x})$는 크게 고려하지 않는다.
 <p align="center">
     <img src="image-1.png" alt="alt text">
 </p>
 
-정리하면 위 그림처럼 "Generative Model"은 Given $\mathbf{y}$ 에 대해서 $\mathbf{x}$ 를 추론하는 문제이고, "Discriminative Model"은 Given $\mathbf{x}$ 에 대해서 $\mathbf{y}$ 를 추론하는 문제이다.
+정리하면 위 그림처럼 "Generative Model"은 Given $\bold{y}$ 에 대해서 $\bold{x}$ 를 추론하는 문제이고, "Discriminative Model"은 Given $\bold{x}$ 에 대해서 $\bold{y}$ 를 추론하는 문제이다.
 
-$\mathbf{x} = \mathbf{x}_1$, $\mathbf{y} = \{0,1\}$ 라고 할 때,
+$\bold{x} = \bold{x}_1$, $\bold{y} = \{0,1\}$ 라고 할 때,
 
-Generative Approach는 $P(\mathbf{x}|\mathbf{y})$ 를 알고 있어서, 다음과 같이 추론:
-
-$$
-P(\mathbf{y}=0|\mathbf{x} = \mathbf{x}_1)=\frac{P(\mathbf{y}=0)P(\mathbf{x} = \mathbf{x}_1|\mathbf{y}=0)}{\int_{y\in \mathbf{y}}~P(\mathbf{y}=y)P(\mathbf{x} = \mathbf{x}_1|\mathbf{y}=y)~dy},
-$$
+Generative Approach는 $P(\bold{x}|\bold{y})$ 를 알고 있어서, 다음과 같이 추론:
 
 $$
-P(\mathbf{y}=1|\mathbf{x} = \mathbf{x}_1)=\frac{P(\mathbf{y}=1)P(\mathbf{x} = \mathbf{x}_1|\mathbf{y}=1)}{\int_{y\in \mathbf{y}}~P(\mathbf{y}=y)P(\mathbf{x} = \mathbf{x}_1|\mathbf{y}=y)~dy}.
-$$
-
-Discriminative Model은 알고 있는 것이 $P(\mathbf{y}|\mathbf{x})$ 여서 다음과 같이 추론:
-$$
-P(\mathbf{y}=0|\mathbf{x}=\mathbf{x}_1),
+P(\bold{y}=0|\bold{x} = \bold{x}_1)=\frac{P(\bold{y}=0)P(\bold{x} = \bold{x}_1|\bold{y}=0)}{\int_{y\in \bold{y}}~P(\bold{y}=y)P(\bold{x} = \bold{x}_1|\bold{y}=y)~dy},
 $$
 
 $$
-P(\mathbf{y}=1|\mathbf{x}=\mathbf{x}_1).
+P(\bold{y}=1|\bold{x} = \bold{x}_1)=\frac{P(\bold{y}=1)P(\bold{x} = \bold{x}_1|\bold{y}=1)}{\int_{y\in \bold{y}}~P(\bold{y}=y)P(\bold{x} = \bold{x}_1|\bold{y}=y)~dy}.
+$$
+
+Discriminative Model은 알고 있는 것이 $P(\bold{y}|\bold{x})$ 여서 다음과 같이 추론:
+$$
+P(\bold{y}=0|\bold{x}=\bold{x}_1),
+$$
+
+$$
+P(\bold{y}=1|\bold{x}=\bold{x}_1).
 $$
 
 <p align="center">
     <img src="image-2.png" alt="alt text">
 </p>
 
-분류 문제에서 Generative Approach는 약간 Direct한 방식으로 분류를 하는게 아니고, Indirect한 방식으로 $P(\mathbf{x})$ 에 대한 확률을 구한 다음 Bayes Rule에 따라 해당 Class를 예측한다. 반면 Discriminative Approach는 곧 바로 해당 확률에 접근하여 예측한다. 위 그림처럼 수학적으로는 무엇을 동일하지만, 조금은 다른 방식을 서로 가지게 된다. 그렇다면 각각이 가지는 장단점이 뭘까?
+분류 문제에서 Generative Approach는 약간 Direct한 방식으로 분류를 하는게 아니고, Indirect한 방식으로 $P(\bold{x})$ 에 대한 확률을 구한 다음 Bayes Rule에 따라 해당 Class를 예측한다. 반면 Discriminative Approach는 곧 바로 해당 확률에 접근하여 예측한다. 위 그림처럼 수학적으로는 무엇을 동일하지만, 조금은 다른 방식을 서로 가지게 된다. 그렇다면 각각이 가지는 장단점이 뭘까?
 
-간단하게 이야기하자면, 보통 현실에서 문제는 $\mathbf{x}$가 완벽하게 주어지지 않는 경우가 많다(e.g., 특정 부분이 손상된 강아지 사진). 하지만 우리는 $P(\mathbf{x})$에 대해서 알고 있다. 손상된 부분을 $\square$ 그리고 정상인 부분을 $\bigcirc$ 이라고 하자 (i.e.,\ $\mathbf{x}=\{\square, \bigcirc\}$). 아래와 같이 marginalization 할 수 있다:
+간단하게 이야기하자면, 보통 현실에서 문제는 $\bold{x}$가 완벽하게 주어지지 않는 경우가 많다(e.g., 특정 부분이 손상된 강아지 사진). 하지만 우리는 $P(\bold{x})$에 대해서 알고 있다. 손상된 부분을 $\square$ 그리고 정상인 부분을 $\bigcirc$ 이라고 하자 (i.e.,\ $\bold{x}=\{\square, \bigcirc\}$). 아래와 같이 marginalization 할 수 있다:
 $$
-P(\mathbf{x}=\{\square, \bigcirc\})=\int_{\bigcirc}P(\square|\bigcirc)P(\bigcirc)d\bigcirc.
+P(\bold{x}=\{\square, \bigcirc\})=\int_{\bigcirc}P(\square|\bigcirc)P(\bigcirc)d\bigcirc.
 $$
 
-직관적으로 설명해서 관측되지 않은 부분에 대해서 모든 경우의 수를 고려하여, $P(\mathbf{x})$ 를 예측할 수 있다.
+직관적으로 설명해서 관측되지 않은 부분에 대해서 모든 경우의 수를 고려하여, $P(\bold{x})$ 를 예측할 수 있다.
 
-그래....멀리도 왔다...위 예시는 조금 부적절할 수 있으니까, 일단 넘어가주기를 바란다. 하여간 $P(\mathbf{x})$를 구해야 하는 이유는 뒤에 더 설명해야 알 수 있다. 그러면 일단 최근에 연구는 어떤 방식으로 $P(\mathbf{x})$를 구할까? 다음 포스트에서...
+그래....멀리도 왔다...위 예시는 조금 부적절할 수 있으니까, 일단 넘어가주기를 바란다. 하여간 $P(\bold{x})$를 구해야 하는 이유는 뒤에 더 설명해야 알 수 있다. 그러면 일단 최근에 연구는 어떤 방식으로 $P(\bold{x})$를 구할까? 다음 포스트에서...
