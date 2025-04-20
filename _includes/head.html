@@ -1,6 +1,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   {% if page.title == "Home" %}
     <meta name="description" content="{{ site.description }}">
   {% endif %}
@@ -15,27 +16,25 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="{{ "/assets/main.css" | relative_url }}">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+  <link rel="stylesheet"
+        href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+        integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
+        crossorigin="anonymous">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ "/assets/favicon-32x32.png" | relative_url }}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ "/assets/favicon-16x16.png" | relative_url }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ "/assets/apple-touch-icon.png" | relative_url }}">
+  <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ "/assets/favicon-32x32.png" | relative_url }}">
+  <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ "/assets/favicon-16x16.png" | relative_url }}">
+  <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ "/assets/apple-touch-icon.png" | relative_url }}">
 
   <!-- RSS -->
   {% feed_meta %}
 
-  <!-- MathJax Script -->
-  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-  <!-- MathJax support -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script type="text/javascript"
-    id="MathJax-script"
-    async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-  <script type="text/javascript" id="MathJax-script" async
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
-
+  <!-- MathJax v3 (로드할 페이지만 mathjax: true) -->
+  {% if page.mathjax or site.mathjax %}
+    <script id="MathJax-script" async
+            src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  {% endif %}
 </head>
