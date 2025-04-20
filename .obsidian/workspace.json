@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "47741ae3db69513e",
+        "id": "c675672d46237b58",
         "type": "tabs",
         "children": [
           {
-            "id": "0e166fa142eced4c",
+            "id": "c0373d836195b25d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Flow Model.md",
-                "mode": "source",
-                "source": false
-              },
+              "type": "empty",
+              "state": {},
               "icon": "lucide-file",
-              "title": "Flow Model"
+              "title": "New tab"
             }
           }
         ]
@@ -179,10 +175,10 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "0e166fa142eced4c",
+  "active": "c0373d836195b25d",
   "lastOpenFiles": [
-    "README.md",
     "Flow Model.md",
+    "README.md",
     "Untitled.canvas",
     "2025-04-20.md"
   ]
