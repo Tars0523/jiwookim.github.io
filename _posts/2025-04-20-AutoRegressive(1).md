@@ -42,9 +42,8 @@ $$
 \
 이때 $P(\bold{x})$는 다음과 같이 적을 수 있다:
 
-{::nomarkdown}
 $$
-P(\bold{x}; \beta_{1:5}) =
+P(\mathbf{x}; \beta_{1:5}) =
 \begin{cases}
 \beta_1 & \text{if } x = 1 \\
 \beta_2 & \text{if } x = 2 \\
@@ -52,7 +51,6 @@ P(\bold{x}; \beta_{1:5}) =
 1-(\beta_1 + \beta_2 + \beta_3 + \beta_4 + \beta_5) & \text{if } x = 6
 \end{cases}
 $$
-{:/}
 
 사람들은 이러한 분포를 "Categorical 분포" 라고 부르기로 약속했다. 
 \
