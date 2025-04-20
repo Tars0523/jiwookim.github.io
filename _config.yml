@@ -16,6 +16,10 @@ kramdown:
   math_engine: mathjax
   math_engine_opts:
     preview: false
+    tex:
+      macros:
+        bold: ["{\\mathbf{#1}}", 1]
+
     
 # Assets
 sass:
